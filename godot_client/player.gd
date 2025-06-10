@@ -35,7 +35,7 @@ func _process(_delta: float) -> void:
 	if is_moving():
 		animation_player.play("run")
 		var mag = (position - network_position).length()
-		animation_player.speed_scale = mag * 6
+		animation_player.speed_scale = mag * 10
 	else:
 		animation_player.play("idle")
 		animation_player.speed_scale = 1
