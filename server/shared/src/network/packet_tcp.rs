@@ -10,6 +10,7 @@ pub struct PacketTCP {
 
 impl PacketTCP {
     pub fn new(stream: TcpStream) -> Self {
+        stream.set_nodelay(true).unwrap();
         PacketTCP { stream }
     }
 
@@ -41,6 +42,7 @@ impl PacketTCP {
         let len = data.len() as u32;
         self.stream.write_all(&len.to_be_bytes())?;
         self.stream.write_all(data)?;
+        self.stream.flush().unwrap();
         Ok(())
     }
 }

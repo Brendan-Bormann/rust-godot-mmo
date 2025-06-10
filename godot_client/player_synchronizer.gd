@@ -4,7 +4,7 @@ extends Node
 @onready var player_container = $Players
 var last_players: PackedStringArray = []
 
-func _physics_process(_delta: float) -> void:
+func _process(_delta: float) -> void:
 	sync_players();
 
 func sync_players():

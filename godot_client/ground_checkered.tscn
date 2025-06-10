@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://b384jbfosh0db"]
+
+[ext_resource type="Texture2D" uid="uid://1iwh7o4cen07" path="res://Textures/groundCheckered.png" id="1_6u370"]
+[ext_resource type="ArrayMesh" uid="uid://bw4725bbie2ky" path="res://OBJ/groundCheckered.obj" id="2_dlg6q"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wkp8b"]
+albedo_texture = ExtResource("1_6u370")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6u370"]
+size = Vector3(100, 100, 100)
+
+[node name="GroundCheckered" type="MeshInstance3D"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 0.00199199, 2.98023e-08, -0.00537002)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("2_dlg6q")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("BoxShape3D_6u370")

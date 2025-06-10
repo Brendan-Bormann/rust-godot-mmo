@@ -1,17 +1,37 @@
-[gd_scene load_steps=7 format=3 uid="uid://cn87ql7nfaqgx"]
+[gd_scene load_steps=16 format=3 uid="uid://cn87ql7nfaqgx"]
 
 [ext_resource type="Script" uid="uid://cxv38y4eu6e3d" path="res://interface.gd" id="1_cm0pq"]
 [ext_resource type="Texture2D" uid="uid://b633qftr3bfp4" path="res://texture_07.png" id="4_cm0pq"]
 [ext_resource type="Script" uid="uid://dkoiuhdum0fn" path="res://player_synchronizer.gd" id="4_lgr22"]
+[ext_resource type="MeshLibrary" uid="uid://ijlex6keitq1" path="res://a.tres" id="4_trn2v"]
+[ext_resource type="PackedScene" uid="uid://b384jbfosh0db" path="res://ground_checkered.tscn" id="6_lgr22"]
+[ext_resource type="Texture2D" uid="uid://bui6dqlscgbid" path="res://Textures/wallBrick01.png" id="7_trn2v"]
+[ext_resource type="ArrayMesh" uid="uid://c1hi6nt0caybr" path="res://OBJ/wallBrick01.obj" id="8_03owx"]
+[ext_resource type="Texture2D" uid="uid://bjrdeoldc6a4x" path="res://Textures/wallBrick04.png" id="8_trn2v"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fos0i"]
 albedo_texture = ExtResource("4_cm0pq")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_cm0pq"]
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_trn2v"]
+
+[sub_resource type="Sky" id="Sky_03owx"]
+sky_material = SubResource("ProceduralSkyMaterial_trn2v")
+
 [sub_resource type="Environment" id="Environment_cm0pq"]
+background_mode = 2
+sky = SubResource("Sky_03owx")
 fog_enabled = true
+fog_light_color = Color(0.360938, 0.391916, 0.440609, 1)
 fog_light_energy = 0.25
+volumetric_fog_length = 10.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wkp8b"]
+albedo_texture = ExtResource("7_trn2v")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_03owx"]
+albedo_texture = ExtResource("8_trn2v")
 
 [node name="Main" type="Node3D"]
 
@@ -188,6 +208,14 @@ offset_right = 120.0
 offset_bottom = 36.0
 text = "Disonnected"
 
+[node name="PacketCounter" type="RichTextLabel" parent="Interface"]
+offset_left = 10.0
+offset_top = 32.0
+offset_right = 127.0
+offset_bottom = 86.0
+text = "S/s: 0
+R/s: 0"
+
 [node name="Game" type="Node" parent="."]
 script = ExtResource("4_lgr22")
 
@@ -196,19 +224,1373 @@ script = ExtResource("4_lgr22")
 [node name="World" type="Node" parent="Game"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Game/World"]
-transform = Transform3D(4.98728, 0, 0, 0, 4.98728, 0, 0, 0, 4.98728, 0, 0, 0)
+transform = Transform3D(4.98728, 0, 0, 0, 4.98728, 0, 0, 0, 4.98728, 0.332678, -0.620407, 0.895783)
+visible = false
 material_override = SubResource("StandardMaterial3D_fos0i")
 mesh = SubResource("PlaneMesh_cm0pq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Game/World"]
 transform = Transform3D(0.708093, -0.497239, 0.501356, -0.00390392, 0.707249, 0.706954, -0.706109, -0.502546, 0.498857, 0, 1.5917, 0)
-light_energy = 1.646
+shadow_enabled = true
+shadow_opacity = 0.75
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Game/World"]
 environment = SubResource("Environment_cm0pq")
 
+[node name="GridMap" type="GridMap" parent="Game/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0.5)
+visible = false
+mesh_library = ExtResource("4_trn2v")
+cell_center_y = false
+data = {
+"cells": PackedInt32Array(1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 2, 0, 3, 1, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 4, 2, 0, 4, 1, 0, 5, 1, 0, 5, 2, 0, 6, 2, 0, 7, 2, 0, 7, 1, 0, 0, 2, 0, 1, 2, 0, 65534, 2, 2, 65534, 3, 2, 65535, 3, 2, 65535, 2, 2, 65534, 1, 2)
+}
+metadata/_editor_floor_ = Vector3(0, 0, 0)
+
+[node name="GroundCheckered" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.49015, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered2" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.49015, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered3" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.49015, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered4" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.49015, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered5" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.49015, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered6" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.49015, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered7" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.49015, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered8" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.49015, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered9" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.49015, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered10" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.49015, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered11" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered12" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered13" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered14" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered15" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered16" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered17" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered114" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered115" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered18" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered20" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered22" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered23" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered33" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered34" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered35" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered36" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered37" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered38" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered39" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered40" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered41" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered42" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered43" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 1.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered44" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered45" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered46" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered47" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered48" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered49" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered50" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered51" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered52" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered53" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered54" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered55" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered56" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered58" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered57" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered59" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered60" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered61" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered62" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered63" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered64" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered65" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered66" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered67" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered68" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered69" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered70" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered71" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered72" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered73" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered74" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered75" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered76" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered77" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered78" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered79" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered80" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered81" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered82" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered83" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered84" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered85" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered86" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered87" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered88" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered89" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered90" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered91" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered99" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered100" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered101" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered102" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered103" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered104" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.49015, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered105" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.49015, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered106" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.49015, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered107" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.49015, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered108" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.49015, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered110" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.49015, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered111" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.49015, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered112" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.49015, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered113" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.49015, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered92" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered93" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered94" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.4902, -1.00511, 21.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered95" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered96" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered97" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered98" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered21" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered24" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered25" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered26" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered27" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.49015, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered28" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.49015, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered29" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.49015, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered30" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.49015, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered117" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.49015, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered118" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.49015, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered119" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.49015, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered120" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.49015, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered121" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.49015, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered122" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.49015, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered123" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.49015, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered124" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.49015, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered125" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.49015, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered126" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.49015, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered127" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered128" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered129" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered130" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered131" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.4902, -1.00511, 19.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered132" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered133" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered134" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered135" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.4902, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered136" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered137" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.49015, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered138" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.49015, -1.00511, 17.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered139" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.49015, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered140" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.49015, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered141" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.49015, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered142" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.49015, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered143" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.49015, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered144" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.49015, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered145" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered146" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered147" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered148" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered149" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered150" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered151" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered152" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered153" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered154" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered155" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered156" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered157" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered158" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered159" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered160" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered161" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.49015, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered116" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.49015, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered31" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.49015, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered32" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.49015, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered19" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered162" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered163" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered164" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered165" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered166" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered167" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered168" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered169" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered170" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered171" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered172" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered173" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered174" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered175" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered176" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered177" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered178" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered179" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered180" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered181" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered182" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered183" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered184" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered185" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered186" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered187" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered188" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered189" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered190" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered191" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered192" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered193" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered194" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered195" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered196" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered197" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered198" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered199" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered200" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered201" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered202" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered203" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered204" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered205" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered206" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered207" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered208" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.4902, -1.00511, 5.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered209" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered210" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered211" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.4902, -1.00511, 7.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered212" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered213" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered214" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.4902, -1.00511, 9.50094)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered215" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered216" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered217" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered218" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered219" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered220" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered221" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.4902, -1.00511, 11.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered222" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.4902, -1.00511, 13.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered223" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.4902, -1.00511, 15.5009)
+skeleton = NodePath("../../..")
+
+[node name="GroundCheckered224" parent="Game/World" instance=ExtResource("6_lgr22")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.4902, -1.00511, 3.50094)
+skeleton = NodePath("../../..")
+
+[node name="WallBrick05" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 9.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick06" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 7.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick07" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 5.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick08" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 3.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick09" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 1.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick10" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick11" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick12" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick13" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick14" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick15" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick16" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick17" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick20" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick21" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick18" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick19" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick22" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick23" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick24" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick25" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick26" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick27" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick48" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick49" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick50" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick28" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.511, -0.181, -0.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick52" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 1.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick53" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 3.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick54" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 5.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick55" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 7.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick56" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 9.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick57" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 11.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick58" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 13.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick59" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 17.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick60" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 15.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick61" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 19.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick62" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 21.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick63" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 23.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick64" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 25.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick65" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick66" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick71" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.511, 0.819, 15.5)
+material_override = SubResource("StandardMaterial3D_03owx")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick73" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.511, 0.819, 13.5)
+material_override = SubResource("StandardMaterial3D_03owx")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick74" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.511, 0.819, 13.5)
+material_override = SubResource("StandardMaterial3D_03owx")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick75" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.511, 0.819, 15.5)
+material_override = SubResource("StandardMaterial3D_03owx")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick76" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.511, 2.819, 15.5)
+material_override = SubResource("StandardMaterial3D_03owx")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick77" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.511, 2.819, 15.5)
+material_override = SubResource("StandardMaterial3D_03owx")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick78" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 27.511, 2.819, 13.5)
+material_override = SubResource("StandardMaterial3D_03owx")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick79" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.511, 2.819, 13.5)
+material_override = SubResource("StandardMaterial3D_03owx")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick80" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 29.511, 2.819, 13.5)
+material_override = SubResource("StandardMaterial3D_03owx")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick67" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 31.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick68" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 35.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick69" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 37.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick70" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 39.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick72" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 33.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick29" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 13.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick36" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 15.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick37" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 17.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick38" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 19.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick39" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 21.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick40" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick30" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, -0.489, -0.181, 11.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick31" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 9.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick32" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 7.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick33" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 5.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick34" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 3.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick35" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 1.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick41" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 13.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick42" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 15.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick43" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 17.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick44" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 19.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick45" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 21.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick46" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 23.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
+[node name="WallBrick47" type="MeshInstance3D" parent="Game/World"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 41.511, -0.181, 11.5)
+material_override = SubResource("StandardMaterial3D_wkp8b")
+mesh = ExtResource("8_03owx")
+skeleton = NodePath("../../..")
+
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.972002, 0.234973, 0, -0.234973, 0.972002, 0, 1.32956, 9.63216)
+transform = Transform3D(1, 0, 0, 0, 0.699663, 0.714473, 0, -0.714473, 0.699663, 7.68834, 12.5969, 11.5483)
 
 [connection signal="pressed" from="Interface/Login/ConnectButton" to="Interface" method="_on_connect_button_pressed"]
 [connection signal="pressed" from="Interface/Menu/DisconnectButton" to="Interface" method="_on_disconnect_button_pressed"]

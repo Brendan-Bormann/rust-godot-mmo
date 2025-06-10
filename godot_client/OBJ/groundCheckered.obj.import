@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bw4725bbie2ky"
+path="res://.godot/imported/groundCheckered.obj-77ed36fa32f18880790507a5d04980eb.mesh"
+
+[deps]
+
+files=["res://.godot/imported/groundCheckered.obj-77ed36fa32f18880790507a5d04980eb.mesh"]
+
+source_file="res://OBJ/groundCheckered.obj"
+dest_files=["res://.godot/imported/groundCheckered.obj-77ed36fa32f18880790507a5d04980eb.mesh", "res://.godot/imported/groundCheckered.obj-77ed36fa32f18880790507a5d04980eb.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

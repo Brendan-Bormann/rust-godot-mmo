@@ -2,9 +2,9 @@ use std::net::TcpStream;
 use std::time::Duration;
 
 use godot::classes::{INode, Node};
-use godot::global::lerp;
 use godot::prelude::*;
 use shared::game::game_state::GameState;
+use shared::game::vector;
 use shared::network::packet::Packet;
 use shared::network::packet_tcp::PacketTCP;
 
@@ -17,10 +17,20 @@ const SERVER_PORT: &str = "8080";
 pub struct NetworkNode {
     tcp_stream: Option<PacketTCP>,
     game_state: GameState,
+    rolling_packet_id: i32,
 
     #[var]
     #[export]
     active: bool,
+
+    #[var]
+    pub di: Vector2,
+    pub last_di: Vector2,
+
+    #[var]
+    pub packets_sent: i32,
+    #[var]
+    pub packets_recv: i32,
 }
 
 #[godot_api]
@@ -31,15 +41,21 @@ impl INode for NetworkNode {
         Self {
             tcp_stream: None,
             game_state: GameState::new(),
+            rolling_packet_id: 1,
             active: false,
+            di: Vector2::ZERO,
+            last_di: Vector2::ZERO,
+            packets_sent: 0,
+            packets_recv: 0,
         }
     }
 
-    fn physics_process(&mut self, delta: f64) {
+    fn physics_process(&mut self, _delta: f64) {
         self.poll_active();
+        self.sync_di();
     }
 
-    fn process(&mut self, delta: f64) {
+    fn process(&mut self, _delta: f64) {
         self.recv_packet();
     }
 }
@@ -47,13 +63,21 @@ impl INode for NetworkNode {
 #[godot_api]
 impl NetworkNode {
     #[func]
-    fn connect_to_server(&mut self, server_ip: String) -> bool {
+    fn connect_to_server(&mut self, server_ip: String, username: String) -> bool {
         match TcpStream::connect(format!("{}:{}", server_ip, SERVER_PORT)) {
             Ok(stream) => {
                 stream
                     .set_read_timeout(Some(Duration::from_millis(10)))
                     .unwrap();
                 self.tcp_stream = Some(PacketTCP::new(stream));
+
+                self.send_packet(&Packet::new(
+                    "1".into(),
+                    2,
+                    1,
+                    Some(bitcode::encode::<String>(&username)),
+                ));
+
                 true
             }
             Err(_) => false,
@@ -106,8 +130,16 @@ impl NetworkNode {
             let packet = tcp_stream.recv_packet();
 
             if packet.is_ok() {
+                self.packets_recv += 1;
                 self.process_packet(&packet.unwrap());
             }
+        }
+    }
+
+    fn send_packet(&mut self, packet: &Packet) {
+        if let Some(ref mut stream) = self.tcp_stream {
+            self.packets_sent += 1;
+            let _ = stream.send_packet(&packet);
         }
     }
 
@@ -136,5 +168,19 @@ impl NetworkNode {
             },
             _ => {}
         };
+    }
+
+    fn sync_di(&mut self) {
+        if let Some(ref mut stream) = self.tcp_stream {
+            if self.di != self.last_di {
+                self.rolling_packet_id += 1;
+                let id = self.rolling_packet_id.to_string();
+                let payload = bitcode::encode(&vector::Vector2::new(self.di.x, self.di.y));
+                let packet = Packet::new(id, 2, 2, Some(payload));
+                self.send_packet(&packet);
+                self.last_di.x = self.di.x;
+                self.last_di.y = self.di.y;
+            }
+        }
     }
 }

@@ -7,3 +7,4 @@ edition = "2024"
 bitcode = { version = "0.6.6" }
 shared = { path = "../shared" }
 tokio = { version = "1.44.2", features = ["full"] }
+rand = { version = "0.9.1" }

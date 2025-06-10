@@ -6,11 +6,14 @@ edition = "2024"
 [dependencies]
 shared = { path = "../shared" }
 redis = { version = "0.30.0", features = ["r2d2"] }
-rapier3d = { version = "0.25.0", features = ["simd-stable", "parallel"] }
+# rapier3d = { version = "0.25.0", features = ["simd-stable", "parallel"] }
 r2d2 = "0.8.10"
-tokio = { version = "1.44.2", features = ["net", "sync"] }
+tokio = { version = "1.44.2", features = ["full"] }
 tracing = "0.1.41"
 tracing-subscriber = "0.3.19"
 bitcode = { version = "0.6.6" }
 rayon = "1.10.0"
 crossbeam-channel = "0.5.15"
+axum = { version = "0.8.4" }
+serde = { version = "1.0.219", features = ["derive"] }
+postgres = "0.19.10"

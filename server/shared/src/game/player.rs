@@ -5,8 +5,7 @@ use bitcode::{Decode, Encode};
 pub struct Player {
     pub id: String,
     pub username: String,
-    pub position: Vector3,
-    pub velocity: Vector3,
+    pub position: Vector2,
     pub input_direction: Vector2,
     pub rotation: f32, // radians
     pub speed: f32,
@@ -17,11 +16,10 @@ impl Player {
         Player {
             id,
             username,
-            position: Vector3::new(0.0, 0.5, 0.0),
-            velocity: Vector3::zero(),
+            position: Vector2::new(0.0, 0.0),
             input_direction: Vector2::zero(),
             rotation: 0.0,
-            speed: 1.0,
+            speed: 5.0,
         }
     }
 
@@ -31,8 +29,7 @@ impl Player {
         let id: String = player_parts[0].parse().unwrap();
         let username: String = player_parts[1].into();
 
-        let position: Vector3 = Vector3::from_string(player_parts[2].into());
-        let velocity: Vector3 = Vector3::from_string(player_parts[3].into());
+        let position: Vector2 = Vector2::from_string(player_parts[2].into());
         let input_direction: Vector2 = Vector2::from_string(player_parts[4].into());
 
         let rotation: f32 = player_parts[5].parse().unwrap();
@@ -42,7 +39,6 @@ impl Player {
             id,
             username,
             position,
-            velocity,
             input_direction,
             rotation,
             speed,
@@ -58,11 +54,10 @@ impl Player {
 impl ToString for Player {
     fn to_string(&self) -> String {
         format!(
-            "{};{};{};{};{};{:.2};{}",
+            "{};{};{};{};{:.2};{}",
             self.id,
             self.username,
             self.position.to_string(),
-            self.velocity.to_string(),
             self.input_direction.to_string(),
             self.rotation,
             self.speed
@@ -71,10 +66,17 @@ impl ToString for Player {
 }
 
 impl Player {
-    pub fn apply_input(&mut self, delta_time: f64) {
-        let mut delta = self.input_direction.clone();
+    pub fn get_target_pos(&mut self, delta_time: f64) -> Vector2 {
+        let mut delta = self.input_direction.clone().normalize();
         delta.multiply(self.speed * delta_time as f32);
 
-        self.position.add_to(delta.to_vector3());
+        Vector2 {
+            x: self.position.x + delta.x,
+            y: self.position.y + delta.y,
+        }
+    }
+
+    pub fn move_to(&mut self, position: Vector2) {
+        self.position = position;
     }
 }

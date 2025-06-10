@@ -35,9 +35,6 @@ impl Session {
         cmd_tx: mpsc::Sender<Command>,
     ) -> Self {
         tcp_stream.set_nonblocking(true).unwrap();
-        tcp_stream
-            .set_read_timeout(Some(Duration::from_millis(1)))
-            .unwrap();
 
         Session {
             session_id,
@@ -88,7 +85,7 @@ impl Session {
             1 => {}
             2 => {
                 match packet.packet_subtype {
-                    0 => {
+                    1 => {
                         match self
                             .command_handler_client
                             .create_character(&packet.id, packet.payload.clone())
@@ -103,12 +100,19 @@ impl Session {
                         };
                     }
                     2 => {
-                        // self.cmd_tx.send(command).unwrap();
-                        // self.pending_cmds.push((
-                        //     packet.id.clone(),
-                        //     packet.packet_subtype,
-                        //     cmd_result,
-                        // ));
+                        match self
+                            .command_handler_client
+                            .set_character_bearing(&packet.id, packet.payload.clone())
+                        {
+                            Ok(_) => {
+                                let response = Packet::respond_to(&packet, true, None);
+                                let _ = self.tcp_stream.send_packet(&response);
+                            }
+                            Err(_) => {
+                                let response = Packet::respond_to(&packet, false, None);
+                                let _ = self.tcp_stream.send_packet(&response);
+                            }
+                        };
                     }
                     _ => {}
                 };
@@ -123,8 +127,10 @@ impl Session {
             let mut new_state = self.state_watch_rx.borrow_and_update().clone();
 
             if let Some(player_id) = self.player_id.clone() {
-                let player = new_state.players.get_mut(&player_id).unwrap();
-                player.id = "0".into();
+                match new_state.players.get_mut(&player_id) {
+                    Some(player) => player.id = "0".into(),
+                    None => {}
+                }
             }
 
             let packet = Packet::new("".into(), 3, 0, Some(bitcode::encode(&new_state)));

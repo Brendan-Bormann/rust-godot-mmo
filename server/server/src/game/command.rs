@@ -1,6 +1,6 @@
 use std::sync::mpsc;
 
-use tokio::sync::oneshot;
+use tokio::sync::oneshot::{self, Receiver};
 use tracing::warn;
 
 pub struct Command {
@@ -98,7 +98,7 @@ impl CommandHandlerClient {
         if self.player_id.is_some() {
             return Err(());
         }
-        let (command, rx) = Command::new(None, packet_id.into(), 0, payload);
+        let (command, rx) = Command::new(None, packet_id.into(), 1, payload);
 
         match self.tx.send(command) {
             Ok(_) => {
@@ -120,6 +120,26 @@ impl CommandHandlerClient {
                     }
                 };
             }
+            Err(e) => {
+                warn!("Failed to send command: {}", e);
+                Err(())
+            }
+        }
+    }
+
+    pub fn set_character_bearing(
+        &mut self,
+        packet_id: &String,
+        payload: Option<Vec<u8>>,
+    ) -> Result<Receiver<CommandResponse>, ()> {
+        if self.player_id.is_none() {
+            return Err(());
+        }
+
+        let (command, rx) = Command::new(self.player_id.clone(), packet_id.into(), 2, payload);
+
+        match self.tx.send(command) {
+            Ok(_) => Ok(rx),
             Err(e) => {
                 warn!("Failed to send command: {}", e);
                 Err(())

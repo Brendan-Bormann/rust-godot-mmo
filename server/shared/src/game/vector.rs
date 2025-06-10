@@ -1,4 +1,5 @@
 use bitcode::{Decode, Encode};
+use std::ops::{Add, Div, Sub};
 
 #[derive(Decode, Encode, Debug, Clone, PartialEq, Copy)]
 pub struct Vector3 {
@@ -119,6 +120,50 @@ impl Vector2 {
             x: self.x,
             y: 0.0,
             z: self.y,
+        }
+    }
+
+    pub fn normalize(&mut self) -> Vector2 {
+        let length = (self.x * self.x + self.y * self.y).sqrt();
+        if length == 0.0 {
+            Vector2::zero()
+        } else {
+            self.x /= length;
+            self.y /= length;
+            *self
+        }
+    }
+}
+
+impl Add for Vector2 {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Vector2 {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
+impl Sub for Vector2 {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Vector2 {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
+    }
+}
+
+impl Div<f32> for Vector2 {
+    type Output = Self;
+
+    fn div(self, rhs: f32) -> Self::Output {
+        Vector2 {
+            x: self.x / rhs,
+            y: self.y / rhs,
         }
     }
 }
