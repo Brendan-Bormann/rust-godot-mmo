@@ -13,7 +13,7 @@ Features:
 
 # Gameplay
 Here's some early gameplay footage, with 1 player and 100 scripted players, all connecting independantly via network. At the moment, the server can support over 500 players at once, but the game client loses a lot of FPS. Needs graphical optimizations.
-![Gameplay](./assets/mmo.gif)
+![Gameplay](./assets/100players.gif)
 
 Here's a screenshot of 1000 players at once (fps is really low due to lack of graphical optimizations)
 ![Gameplay](./assets/1000players.png)
