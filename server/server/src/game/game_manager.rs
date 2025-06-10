@@ -21,7 +21,7 @@ pub struct GameManager {
     state: GameState,
     state_watch_tx: watch::Sender<GameState>,
     cmd_rx: mpsc::Receiver<Command>,
-    rolling_id: i16, // use self.next_id()
+    rolling_id: i16,
     map: Map,
 }
 
@@ -77,12 +77,8 @@ impl GameManager {
     fn recv_commands(&mut self) {
         let cmds: Vec<_> = self.cmd_rx.try_iter().collect();
 
-        if cmds.len() > 0 {
-            // info!("GameManager batched {} commands", cmds.len());
-
-            for cmd in cmds {
-                self.process_command(cmd);
-            }
+        for cmd in cmds {
+            self.process_command(cmd);
         }
     }
 

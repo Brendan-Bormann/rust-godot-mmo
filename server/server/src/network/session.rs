@@ -127,14 +127,41 @@ impl Session {
             let mut new_state = self.state_watch_rx.borrow_and_update().clone();
 
             if let Some(player_id) = self.player_id.clone() {
-                match new_state.players.get_mut(&player_id) {
-                    Some(player) => player.id = "0".into(),
-                    None => {}
-                }
-            }
+                let self_position = match new_state.players.get_mut(&player_id) {
+                    Some(player) => {
+                        player.id = "0".into();
+                        Some(player.position)
+                    }
+                    None => None,
+                };
 
-            let packet = Packet::new("".into(), 3, 0, Some(bitcode::encode(&new_state)));
-            let _ = self.tcp_stream.send_packet(&packet);
+                if let Some(self_pos) = self_position {
+                    use std::collections::HashMap;
+
+                    let mut players_with_distance: Vec<_> = new_state
+                        .players
+                        .iter()
+                        .map(|(id, player)| {
+                            let distance = player.position.distance(&self_pos);
+                            (id.clone(), player.clone(), distance)
+                        })
+                        .collect();
+
+                    players_with_distance
+                        .sort_by(|a, b| a.2.partial_cmp(&b.2).unwrap_or(std::cmp::Ordering::Equal));
+
+                    let trimmed_players: HashMap<_, _> = players_with_distance
+                        .into_iter()
+                        .take(1000)
+                        .map(|(id, player, _)| (id, player))
+                        .collect();
+
+                    new_state.players = trimmed_players;
+                }
+
+                let packet = Packet::new("".into(), 3, 0, Some(bitcode::encode(&new_state)));
+                let _ = self.tcp_stream.send_packet(&packet);
+            }
         }
     }
 

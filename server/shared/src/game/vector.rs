@@ -133,6 +133,12 @@ impl Vector2 {
             *self
         }
     }
+
+    pub fn distance(&self, other: &Vector2) -> f32 {
+        let dx = self.x - other.x;
+        let dy = self.y - other.y;
+        (dx * dx + dy * dy).sqrt()
+    }
 }
 
 impl Add for Vector2 {

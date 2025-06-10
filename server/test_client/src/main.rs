@@ -14,7 +14,7 @@ use shared::{
 };
 
 // scratch pad for scripting players
-const PLAYER_COUNT: i16 = 100;
+const PLAYER_COUNT: i16 = 1000;
 
 fn main() {
     println!("Running bots...");

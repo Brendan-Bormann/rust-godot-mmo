@@ -50,13 +50,15 @@ impl INode for NetworkNode {
         }
     }
 
-    fn physics_process(&mut self, _delta: f64) {
-        self.poll_active();
-        self.sync_di();
-    }
+    // fn physics_process(&mut self, _delta: f64) {
+    //     self.poll_active();
+    //     self.sync_di();
+    // }
 
     fn process(&mut self, _delta: f64) {
         self.recv_packet();
+        self.poll_active();
+        self.sync_di();
     }
 }
 
