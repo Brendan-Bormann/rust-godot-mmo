@@ -77,7 +77,7 @@ impl CommandHandlerClient {
     }
 
     fn send_command(&mut self, command: Command) {
-        self.tx.send(command);
+        self.tx.send(command).unwrap()
     }
 
     fn get_command_result(&mut self, rx: oneshot::Receiver<CommandResponse>) -> CommandResponse {

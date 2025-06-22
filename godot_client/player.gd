@@ -25,17 +25,20 @@ func sync_network_position():
 		var target_angle = atan2(move_dir.x, move_dir.z)
 		model.rotation.y = lerp_angle(model.rotation.y, target_angle, 0.2)
 
-func is_moving():
-	return (network_position - position).length() > 0.02
-
 func _process(_delta: float) -> void:
 	sync_network_position()
 	nametag.text = self.username
 	
-	if is_moving():
+	var movement_mag = (network_position - position).length()
+	
+	if movement_mag > 0.05:
 		animation_player.play("run")
 		var mag = (position - network_position).length()
 		animation_player.speed_scale = mag * 10
+	elif movement_mag > 0.01:
+		animation_player.play("walk")
+		var mag = (position - network_position).length()
+		animation_player.speed_scale = mag * 12
 	else:
 		animation_player.play("idle")
 		animation_player.speed_scale = 1

@@ -34,6 +34,7 @@ albedo_texture = ExtResource("7_trn2v")
 albedo_texture = ExtResource("8_trn2v")
 
 [node name="Main" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.8552, 0, 0)
 
 [node name="Interface" type="Node" parent="."]
 script = ExtResource("1_cm0pq")
@@ -230,7 +231,7 @@ material_override = SubResource("StandardMaterial3D_fos0i")
 mesh = SubResource("PlaneMesh_cm0pq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Game/World"]
-transform = Transform3D(0.708093, -0.497239, 0.501357, -0.00390392, 0.707249, 0.706954, -0.706109, -0.502546, 0.498857, 0, 1.5917, 0)
+transform = Transform3D(0.708093, -0.497239, 0.501357, -0.00390392, 0.707249, 0.706954, -0.706109, -0.502546, 0.498857, -18.125, 1.5917, 0)
 shadow_enabled = true
 shadow_opacity = 0.75
 

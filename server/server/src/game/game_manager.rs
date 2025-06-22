@@ -1,20 +1,12 @@
-use std::{collections::HashMap, thread, time::Duration};
+use std::{thread, time::Duration};
 
-use shared::game::{
-    game_state::GameState,
-    player::Player,
-    vector::{Vector2, Vector3},
-};
+use shared::game::{game_state::GameState, player::Player, vector::Vector2};
 use std::sync::mpsc;
 use tokio::sync::watch;
 use tracing::info;
 
-use crate::game::map::{Map, Tile};
-
-use super::{
-    command::{Command, CommandResponse},
-    map,
-};
+use super::command::{Command, CommandResponse};
+use super::map::Map;
 
 pub struct GameManager {
     tick_rate: u64, // ticks per second
@@ -35,7 +27,7 @@ impl GameManager {
 
         (
             GameManager {
-                tick_rate: 30,
+                tick_rate: 20,
                 state: initial_state,
                 state_watch_tx: state_tx,
                 cmd_rx,
@@ -51,19 +43,16 @@ impl GameManager {
 impl GameManager {
     pub fn start(&mut self) {
         info!("GameManager started");
-        let mut player = Player::new("1".into(), "TheLegend27".into());
-        player.input_direction = Vector2::new(1.0, 0.0);
-        self.state.players.insert(player.id.clone(), player.clone());
 
         loop {
             self.recv_commands();
             self.sync_state();
-            self.apply_input(self.delta());
+            self.apply_input(self.delta_time());
             thread::sleep(Duration::from_millis(1000 / self.tick_rate));
         }
     }
 
-    fn delta(&self) -> f64 {
+    fn delta_time(&self) -> f64 {
         1.0 / self.tick_rate as f64
     }
 

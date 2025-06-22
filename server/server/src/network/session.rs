@@ -20,7 +20,6 @@ pub struct Session {
     origin: String,
     player_id: Option<String>,
     state_watch_rx: watch::Receiver<GameState>,
-    cmd_tx: mpsc::Sender<Command>,
     pending_cmds: Vec<(String, i16, oneshot::Receiver<Result<Option<Vec<u8>>, i16>>)>,
     command_handler_client: CommandHandlerClient,
 }
@@ -43,7 +42,6 @@ impl Session {
             origin: origin.to_string(),
             player_id: None,
             state_watch_rx,
-            cmd_tx: cmd_tx.clone(),
             pending_cmds: vec![],
             command_handler_client: CommandHandlerClient::new(cmd_tx.clone()),
         }
@@ -152,7 +150,7 @@ impl Session {
 
                     let trimmed_players: HashMap<_, _> = players_with_distance
                         .into_iter()
-                        .take(1000)
+                        .take(100)
                         .map(|(id, player, _)| (id, player))
                         .collect();
 

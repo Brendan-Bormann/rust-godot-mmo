@@ -20,6 +20,7 @@ fn main() {
     println!("Running bots...");
 
     for i in 1..PLAYER_COUNT {
+        thread::sleep(Duration::from_millis(10));
         thread::spawn(move || {
             println!(" - starting bot {}", i);
             start_bot(i);
