@@ -29,7 +29,13 @@ func _process(delta: float) -> void:
 	update_packet_counter(delta)
 
 func _on_connect_button_pressed() -> void:
-	var success = GlobalNetwork.connect_to_server(server_addr_field.text, username_field.text)
+	
+	var login_success = GlobalNetwork.login(server_addr_field.text, username_field.text, password_field.text)
+	
+	if !login_success:
+		return
+	
+	var success = GlobalNetwork.connect_to_server(server_addr_field.text)
 	
 	if success:
 		login_form.visible = false

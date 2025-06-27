@@ -7,6 +7,11 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-godot = "0.2.4"
+godot = "0.3.1"
 shared = { path = "../shared" }
 bitcode = "0.6.6"
+rustls = "0.23.28"
+webpki-roots = "1.0.1"
+reqwest = { version = "0.12.20", features = ["json", "blocking"] }
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"

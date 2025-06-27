@@ -7,17 +7,17 @@ use axum::{
 use std::net::SocketAddr;
 use tracing::info;
 
-use crate::storage::mem_db::MemDB;
+use crate::storage::Storage;
 
 #[derive(Clone)]
 pub struct AppState {
-    pub mem_db: MemDB,
+    pub db: Storage,
 }
 
-pub async fn start_api(address: String, mem_db: MemDB) {
-    info!("API started");
+pub async fn start_api(address: String, db: Storage) {
+    info!("- API started");
 
-    let state = AppState { mem_db };
+    let state = AppState { db };
 
     let app = Router::new()
         .route("/", get(root_handler))

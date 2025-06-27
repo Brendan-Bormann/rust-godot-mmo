@@ -23,7 +23,7 @@ impl GameManager {
         let (state_tx, state_rx) = watch::channel(initial_state.clone());
         let (cmd_tx, cmd_rx) = mpsc::channel::<Command>();
 
-        let map = Map::new("map.txt".into());
+        let map = Map::new("maps/debug.txt".into());
 
         (
             GameManager {
@@ -42,7 +42,7 @@ impl GameManager {
 
 impl GameManager {
     pub fn start(&mut self) {
-        info!("GameManager started");
+        info!("- Game started");
 
         loop {
             self.recv_commands();

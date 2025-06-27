@@ -1,48 +1,89 @@
-use std::io;
-use std::io::{Read, Write};
-use std::net::TcpStream;
+use bitcode::{decode, encode};
+use std::io::{self, Read, Write};
 
-use super::packet::Packet;
+use crate::{
+    game::vector::Vector2,
+    network::packet::{Packet, PacketPayload, PacketType},
+};
 
-pub struct PacketTCP {
-    pub stream: TcpStream,
+pub struct PacketTCP<S> {
+    pub stream: S,
 }
 
-impl PacketTCP {
-    pub fn new(stream: TcpStream) -> Self {
-        stream.set_nodelay(true).unwrap();
-        PacketTCP { stream }
+impl<S: Read + Write> PacketTCP<S> {
+    pub fn new(stream: S) -> Self {
+        Self { stream }
     }
 
-    pub fn recv_packet(&mut self) -> Result<Packet, io::Error> {
-        let buf = self.read()?;
-        let packet = bitcode::decode::<Packet>(&buf).map_err(|e| {
-            io::Error::new(io::ErrorKind::InvalidData, format!("decode error: {}", e))
-        })?;
-        Ok(packet)
-    }
-
-    pub fn read(&mut self) -> io::Result<Vec<u8>> {
+    fn read(&mut self) -> io::Result<Vec<u8>> {
         let mut len_buf = [0u8; 4];
         self.stream.read_exact(&mut len_buf)?;
         let len = u32::from_be_bytes(len_buf) as usize;
-
         let mut buf = vec![0u8; len];
         self.stream.read_exact(&mut buf)?;
         Ok(buf)
     }
 
-    pub fn send_packet(&mut self, packet: &Packet) -> Result<(), io::Error> {
-        let data = bitcode::encode(packet);
-        self.write(&data)?;
-        Ok(())
+    fn write(&mut self, data: &[u8]) -> io::Result<()> {
+        self.stream.write_all(&(data.len() as u32).to_be_bytes())?;
+        self.stream.write_all(data)?;
+        self.stream.flush()
     }
 
-    pub fn write(&mut self, data: &[u8]) -> io::Result<()> {
-        let len = data.len() as u32;
-        self.stream.write_all(&len.to_be_bytes())?;
-        self.stream.write_all(data)?;
-        self.stream.flush().unwrap();
-        Ok(())
+    pub fn recv_packet(&mut self) -> io::Result<Packet> {
+        let buf = self.read()?;
+        decode::<Packet>(&buf)
+            .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e.to_string()))
+    }
+
+    pub fn send_packet(&mut self, packet: &Packet) -> io::Result<()> {
+        let data = encode(packet);
+        self.write(&data)
+    }
+
+    // --- high-level senders ---
+
+    pub fn send_heartbeat(&mut self, id: String) -> io::Result<()> {
+        self.send_packet(&Packet::new(id, PacketType::Heartbeat, PacketPayload::None))
+    }
+
+    pub fn send_auth_token(&mut self, id: String, auth_token: String) -> io::Result<()> {
+        self.send_packet(&Packet::new(
+            id,
+            PacketType::AuthToken,
+            PacketPayload::Token(auth_token),
+        ))
+    }
+
+    pub fn send_input_failure(&mut self, id: String) -> io::Result<()> {
+        self.send_packet(&Packet::new(
+            id,
+            PacketType::InputFailure,
+            PacketPayload::None,
+        ))
+    }
+
+    pub fn send_input_success(&mut self, id: String) -> io::Result<()> {
+        self.send_packet(&Packet::new(
+            id,
+            PacketType::InputSuccess,
+            PacketPayload::None,
+        ))
+    }
+
+    pub fn send_input_direction(&mut self, id: String, dir: Vector2) -> io::Result<()> {
+        self.send_packet(&Packet::new(
+            id,
+            PacketType::InputDirection,
+            PacketPayload::InputDirection(dir),
+        ))
+    }
+
+    pub fn send_input_rotation(&mut self, id: String, rot: f32) -> io::Result<()> {
+        self.send_packet(&Packet::new(
+            id,
+            PacketType::InputRotation,
+            PacketPayload::InputRotation(rot),
+        ))
     }
 }

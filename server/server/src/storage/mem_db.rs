@@ -7,7 +7,9 @@ pub struct MemDB {
 }
 
 impl MemDB {
-    pub fn new(pool: Pool<Client>) -> MemDB {
+    pub fn new(mem_db_addr: String) -> MemDB {
+        let mem_db_client = redis::Client::open(mem_db_addr).unwrap();
+        let pool = r2d2::Pool::builder().build(mem_db_client).unwrap();
         MemDB { con_pool: pool }
     }
 

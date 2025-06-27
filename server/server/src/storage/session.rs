@@ -1,45 +1,52 @@
 use super::mem_db::MemDB;
+use bitcode::{Decode, Encode};
 use redis::Commands;
 
+#[derive(Encode, Decode)]
+pub struct SessionData {
+    pub auth_token: String,
+    pub account_id: String,
+}
+
 impl MemDB {
-    pub fn create_session(&mut self, addr: &str, username: &String) -> Result<(), ()> {
+    pub fn open_session(
+        &mut self,
+        addr: &str,
+        auth_token: &String,
+        account_id: String,
+    ) -> Result<(), String> {
         let mut con = self.get_con();
         let key = format!("session:{}", addr);
-        let _: () = con.set(key, username).unwrap();
+        let session_data = SessionData {
+            auth_token: auth_token.clone(),
+            account_id,
+        };
+
+        let _: () = con.set(key, bitcode::encode(&session_data)).unwrap();
         Ok(())
     }
 
-    // pub fn update_session(&mut self, session: &Session) -> Result<(), ()> {
-    //     let key = format!("session:{}", session.peer);
-    //     let encoded = bitcode::encode(session);
-    //     let _: () = self.con.set(key, encoded).unwrap();
-    //     Ok(())
-    // }
-
-    pub fn find_session(&mut self, addr: &str) -> Result<Option<String>, ()> {
+    pub fn find_session(&mut self, addr: &str) -> Result<Option<SessionData>, ()> {
         let mut con = self.get_con();
         let key = format!("session:{}", addr);
-        let value = con.get(key).unwrap();
-        Ok(Some(value))
+        let value: Option<Vec<u8>> = con.get(key).expect("Failed to enter session");
+
+        if value.is_none() {
+            return Ok(None);
+        }
+
+        let session_data: SessionData = bitcode::decode(&value.unwrap()).unwrap();
+        Ok(Some(session_data))
     }
 
-    pub fn delete_session(&mut self, addr: &str) -> Result<(), ()> {
+    pub fn consume_session(&mut self, addr: &str) -> Result<(), ()> {
+        self.close_session(addr)
+    }
+
+    pub fn close_session(&mut self, addr: &str) -> Result<(), ()> {
         let mut con = self.get_con();
         let key = format!("session:{}", addr);
         let _: () = con.del(key).unwrap();
         Ok(())
     }
-
-    // pub fn find_all_sessions(&mut self) -> Vec<Session> {
-    //     let session_keys = self.get_all_keys("session");
-    //     let mut sessions: Vec<Session> = vec![];
-
-    //     for session_key in session_keys {
-    //         let encoded: Vec<_> = self.con.get(session_key).unwrap();
-    //         let session = bitcode::decode(&encoded).expect("Decoding failed");
-    //         sessions.push(session);
-    //     }
-
-    //     sessions
-    // }
 }

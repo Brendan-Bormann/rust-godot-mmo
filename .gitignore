@@ -1,3 +1,2 @@
-/server/server/target
-/server/client/target
-/server/target
+**/target
+**/certs/**
